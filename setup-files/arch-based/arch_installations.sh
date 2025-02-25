@@ -75,7 +75,7 @@ install_essential_apps() {
     echo -e "===============================================\n"
     echo -e "Installing essential apps: Vim, Neovim, xsel, nodejs, npm, yarn, zsh, tree, tmux\n"
     echo -e "===============================================\n"
-    sudo pacman -S --needed vim pavucontrol nitrogen htop neovim neofetch xsel nodejs npm yarn zsh tree tmux --noconfirm
+    sudo pacman -S --needed gvim pavucontrol nitrogen htop neovim neofetch xsel nodejs npm yarn zsh tree tmux --noconfirm
     check_success "Essential apps installation"
 }
 
