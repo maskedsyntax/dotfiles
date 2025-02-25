@@ -14,19 +14,17 @@ sudo apt install fonts-firacode fonts-cascadia-code
 
 # Installing Alacritty Terminal (Using PPA)
 echo -e "===============================================\n"
-echo -e "Installing Alacritty Terminal (Using PPA)\n"
+echo -e "Installing Alacritty and Kitty Terminal \n"
 echo -e "===============================================\n"
-sudo add-apt-repository ppa:aslatter/ppa
-sudo apt update
-sudo apt install alacritty
+sudo apt install alacritty kitty
 
 #installing oh-my-zsh
-#echo -e "===============================================\n"
-#echo -e "Installing ohmyzsh\n"
-#echo -e "===============================================\n"
-#sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
-#git clone https://github.com/zsh-users/zsh-autosuggestions.git $ZSH_CUSTOM/plugins/zsh-autosuggestions
-#git clone https://github.com/zsh-users/zsh-syntax-highlighting.git $ZSH_CUSTOM/plugins/zsh-syntax-highlighting
+echo -e "===============================================\n"
+echo -e "Installing ohmyzsh\n"
+echo -e "===============================================\n"
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+git clone https://github.com/zsh-users/zsh-autosuggestions.git $ZSH_CUSTOM/plugins/zsh-autosuggestions
+git clone https://github.com/zsh-users/zsh-syntax-highlighting.git $ZSH_CUSTOM/plugins/zsh-syntax-highlighting
 
 
 # Download Spotify for Linux
