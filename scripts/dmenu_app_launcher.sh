@@ -20,6 +20,9 @@ done)
 # Use dmenu to choose an app (displaying only the app name)
 choice=$(echo "$entries" | cut -d'|' -f1 | sort -u | dmenu -i -p "Launch:")
 
+# If no app was selected (e.g. ESC pressed), exit early
+[ -z "$choice" ] && exit 1
+
 # If a choice was made, locate the corresponding desktop file
 selected_entry=$(echo "$entries" | grep -F "$choice|" | head -n 1)
 
