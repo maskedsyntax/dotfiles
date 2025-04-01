@@ -18,7 +18,7 @@ entries=$(find "${APP_PATHS[@]}" -name '*.desktop' 2>/dev/null | while read -r f
 done)
 
 # Use dmenu to choose an app (displaying only the app name)
-choice=$(echo "$entries" | cut -d'|' -f1 | sort -u | dmenu -i -p "Launch:")
+choice=$(echo "$entries" | cut -d'|' -f1 | sort -u | dmenu -fn "Monospace-11" -i -p "Launch:")
 
 # If no app was selected (e.g. ESC pressed), exit early
 [ -z "$choice" ] && exit 1
