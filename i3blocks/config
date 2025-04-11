@@ -1,0 +1,28 @@
+[general]
+separator=false
+
+[memory]
+# This wraps the output of memory.sh so that if memory.sh outputs "28%" 
+# it becomes "[Memory : 28%]"
+command=bash -c 'echo "[Memory : $(~/.config/i3blocks/scripts/memory.sh)]"'
+interval=10
+
+[volume]
+command=bash -c 'echo "[Volume : $(~/.config/i3blocks/scripts/volume.sh)]"'
+interval=1
+
+[music]
+# Use your music.sh (or spotify.sh) script that returns the song name.
+command=bash -c 'echo "[Song : $(~/.config/i3blocks/scripts/music.sh)]"'
+interval=5
+
+[battery]
+# This uses the battery.sh script (which now queries BAT1 via upower) 
+command=bash -c 'echo "[Battery : $(~/.config/i3blocks/scripts/battery.sh)]"'
+interval=30
+
+[date]
+# The date command is wrapped to match the format "[Day dd/mm/yyyy hh:mm:ss]"
+command=date '+[%A %d/%m/%Y %H:%M:%S]'
+interval=1
+
