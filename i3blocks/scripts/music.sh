@@ -1,18 +1,21 @@
 #!/bin/bash
-# music.sh
+# music.sh — Get current YouTube Music song from Brave window title
 
-# 1. Check if playerctl is installed
-if ! command -v playerctl &>/dev/null; then
-    echo "No Spotify lul"
-    exit 0
+# Check if xwininfo is installed
+if ! command -v xwininfo &>/dev/null; then
+    echo "xwininfo not found"
+    exit 1
 fi
 
-# 2. Attempt to get the current Spotify track
-track="$(playerctl --player=spotify metadata --format '{{ artist }} - {{ title }}' 2>/dev/null)"
+# Try to extract the song title from the Brave window running YouTube Music
+song_title=$(xwininfo -root -tree \
+    | grep -i 'YouTube Music - ' \
+    | sed -E 's/.*YouTube Music - (.*) - YouTube Music.*/\1/' \
+    | head -n 1)
 
-# 3. If playerctl fails or returns empty, print "No Spotify lul"
-if [ $? -ne 0 ] || [ -z "$track" ]; then
-    echo "No Spotify LuL!"
+# If empty, show fallback
+if [ -z "$song_title" ]; then
+    echo "No YouTube Music LuL!"
 else
-    echo "$track"
+    echo "$song_title"
 fi
