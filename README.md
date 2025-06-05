@@ -13,6 +13,9 @@ xinput set-prop <id> "libinput Natural Scrolling Enabled" 1
 xinput set-prop <id> "libinput Tapping Enabled" 1
 ```
 
+### Cinnamon Configuration
+To use MaskedSyntax theme for cinnamon desktop (dark black panel with 70% transparency), move the folder `/cinnamon-theme/MaskedSyntax` to `/usr/share/themes/` and select the theme from the settings app.
+
 ### Vim Config
 
 To Copy/Paste text from vim to other applications: </br>
