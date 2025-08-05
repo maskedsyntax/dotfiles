@@ -2,7 +2,7 @@ let g:mapleader = "\<Space>"
 syntax on
 set number relativenumber
 set hidden
-set nowrap
+set wrap
 set noerrorbells
 set encoding=utf-8
 set pumheight=10
@@ -27,6 +27,7 @@ set background=dark
 set formatoptions-=c
 set formatoptions-=r
 set formatoptions-=o
+set clipboard+=unnamedplus
 
 inoremap jk <Esc>
 inoremap kj <Esc>
@@ -48,6 +49,7 @@ Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'ryanoasis/vim-devicons'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
+Plug 'tomasiser/vim-code-dark'
 Plug 'joshdick/onedark.vim'
 Plug 'sainnhe/sonokai'
 Plug 'junegunn/fzf', {'do': { -> fzf#install() }}
@@ -95,19 +97,23 @@ else
   set signcolumn=yes
 endif
 
+let g:AutoPairsMapCR = 0
+
 " Use tab for trigger completion with characters ahead and navigate.
 " NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
 " other plugin before putting this into your config.
+function! CheckBackSpace() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1] =~# '\s'
+endfunction
+
 inoremap <silent><expr> <TAB>
       \ pumvisible() ? "\<C-n>" :
-      \ <SID>check_back_space() ? "\<TAB>" :
+      \ CheckBackSpace() ? "\<TAB>" :
       \ coc#refresh()
+
 inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
 
-function! s:check_back_space() abort
-  let col = col('.') - 1
-  return !col || getline('.')[col - 1]  =~# '\s'
-endfunction
 
 " Use <c-space> to trigger completion.
 if has('nvim')
@@ -118,8 +124,9 @@ endif
 
 " Make <CR> auto-select the first completion item and notify coc.nvim to
 " format on enter, <cr> could be remapped by other vim plugin
-inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm()
-                              \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
+inoremap <silent><expr> <CR> pumvisible() ? coc#_select_confirm() : "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
+
+" inoremap <silent> <CR> coc#_select_confirm()
 
 " Use `[g` and `]g` to navigate diagnostics
 " Use `:CocDiagnostics` to get all diagnostics of current buffer in location list.
@@ -325,7 +332,7 @@ let g:airline_right_alt_sep = ''
 "  ☰ ⚡
 
 " Switch to your current theme
-let g:airline_theme = 'gruvbox'
+let g:airline_theme = 'codedark'
 
 " Always show tabs
 set showtabline=2
@@ -338,21 +345,25 @@ set cmdheight=1
 
 "========================================================> GruvBox THEMING
 let g:gruvbox_contrast_dark = 'hard'
-"let g:gruvbox_transparent_bg = 1
-"let g:gruvbox_italic=1
+let g:gruvbox_transparent_bg = 1
+let g:gruvbox_italic=1
 colorscheme gruvbox
 "========================================================> THEMING
 "colorscheme dracula
-"colorscheme onedark
+" colorscheme onedark
 "=========================================================>> MAIN THEME
-"let g:sonokai_style = 'andromeda'
-"let g:sonokai_enable_italic = 1
-"colorscheme sonokai 
-"
+" let g:sonokai_style = 'andromeda'
+" let g:sonokai_enable_italic = 1
+" colorscheme sonokai 
+" hi Normal guibg=NONE ctermbg=NONE
+
+let g:codedark_transparent=1
+let g:codedark_italics=1
+colorscheme codedark
 
 lua <<EOF
 require'nvim-treesitter.configs'.setup {
-  ensure_installed = "maintained", -- one of "all", "maintained" (parsers with maintainers), or a list of languages
+  ensure_installed = { "c", "cpp", "python", "lua", "javascript", "go", "vim" }, -- one of "all", "maintained" (parsers with maintainers), or a list of languages
   --ignore_install = { "javascript" }, -- List of parsers to ignore installing
   highlight = {
     enable = true,              -- false will disable the whole extension
