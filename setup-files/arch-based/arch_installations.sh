@@ -84,9 +84,9 @@ install_essential_apps() {
 # ============================================
 install_fonts() {
     echo -e "===============================================\n"
-    echo -e "Installing Fonts: Courier-Code and JetBrainsMono\n"
+    echo -e "Installing Fonts: Courier-Code, JetBrainsMono, FiraCode\n"
     echo -e "===============================================\n"
-    yay -S --needed ttf-courier-code ttf-jetbrains-mono --noconfirm
+    yay -S --needed ttf-courier-code ttf-jetbrains-mono ttf-fira-code --noconfirm
     check_success "Font installation"
 }
 
