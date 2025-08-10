@@ -7,7 +7,7 @@ echo -e "===============================================\n"
 sudo apt install vim-gtk3 htop neovim neofetch xsel nodejs gnome-tweaks curl wget npm yarn tree tmux ubuntu-restricted-extras
 
 # Installing extra fonts
-sudo apt install fonts-firacode fonts-cascadia-code
+sudo apt install fonts-firacode fonts-cascadia-code fonts-jetbrains-mono
 
 # Uncomment if you want to install zsh
 # sudo apt install zsh
