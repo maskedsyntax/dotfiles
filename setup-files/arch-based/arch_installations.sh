@@ -108,7 +108,7 @@ install_browsers() {
     echo -e "===============================================\n"
     echo -e "Installing Browsers: Google Chrome, Epiphany, Brave\n"
     echo -e "===============================================\n"
-    yay -S --needed brave-bin google-chrome epiphany --noconfirm
+    curl -fsS https://dl.brave.com/install.sh | sh
     check_success "Browser installation"
 }
 
