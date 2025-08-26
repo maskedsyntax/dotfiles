@@ -102,6 +102,17 @@ install_java() {
 }
 
 # ============================================
+# Installing Zed
+# ============================================
+install_zed() {
+    echo -e "===============================================\n"
+    echo -e "Installing Browsers: Google Chrome, Epiphany, Brave\n"
+    echo -e "===============================================\n"
+    curl -f https://zed.dev/install.sh | sh
+    check_success "Zed installation"
+}
+
+# ============================================
 # Installing Browsers
 # ============================================
 install_browsers() {
@@ -204,6 +215,7 @@ install_yay
 install_essential_apps
 install_fonts
 install_java
+install_zed
 install_browsers
 install_ides_and_editors
 install_dev_tools

@@ -26,6 +26,12 @@ sh -c "$(curl -fsSL https://raw.githubusercontent.com/maskedsyntax/ohmyzsh/maste
 git clone https://github.com/zsh-users/zsh-autosuggestions.git $ZSH_CUSTOM/plugins/zsh-autosuggestions
 git clone https://github.com/zsh-users/zsh-syntax-highlighting.git $ZSH_CUSTOM/plugins/zsh-syntax-highlighting
 
+#installing zed
+echo -e "===============================================\n"
+echo -e "Installing zed\n"
+echo -e "===============================================\n"
+curl -f https://zed.dev/install.sh | sh
+
 # installing brave browser
 echo -e "===============================================\n"
 echo -e "Installing Brave Browser\n"
