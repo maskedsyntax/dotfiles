@@ -13,7 +13,7 @@ set $mod Mod4
 
 # Font for window titles. Will also be used by the bar unless a different font
 # is used in the bar {} block below.
-font pango:jetbrains mono 7
+font pango:Maple Mono NF 8
 
 # This font is widely installed, provides lots of unicode glyphs, right-to-left
 # text rendering and scalability on retina/hidpi displays (thanks to pango).
@@ -42,11 +42,7 @@ bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ to
 bindsym XF86AudioMicMute exec --no-startup-id pactl set-source-mute @DEFAULT_SOURCE@ toggle && $refresh_i3status
 
 # Keyboard shortcuts for screenshots using flameshot
-# Capture the entire screen (all monitors)
-bindsym Shift+Print exec --no-startup-id flameshot full 
-
-# Capture a selected region interactively
-bindsym Print exec --no-startup-id flameshot gui 
+bindsym Print exec flameshot gui
 
 # Keybinding for i3lock
 bindsym $mod+l exec --no-startup-id i3lock -c 000000
@@ -57,10 +53,6 @@ floating_modifier $mod
 # move tiling windows via drag & drop by left-clicking into the title bar,
 # or left-clicking anywhere into the window while holding the floating modifier.
 tiling_drag modifier titlebar
-
-# Window-Specific setting
-for_window [class=".*"] border pixel 1 # This keeps 2-pixel border but removes the window titlebar
-
 
 # start a terminal
 # bindsym $mod+Return exec i3-sensible-terminal
@@ -169,7 +161,8 @@ bindsym $mod+Shift+c reload
 # restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
 bindsym $mod+Shift+r restart
 # exit i3 (logs you out of your X session)
-bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -B 'Yes, exit i3' 'i3-msg exit'"
+# bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -B 'Yes, exit i3' 'i3-msg exit'"
+bindsym $mod+Shift+e exec "~/scripts/i3-exit-nagbar.sh"
 
 # resize window (you can also use the mouse for that)
 mode "resize" {
@@ -201,11 +194,11 @@ bindsym $mod+r mode "resize"
 # Start i3bar to display a workspace bar (plus the system information i3status
 # finds out, if available)
 bar {
-position top
+        position top
         status_command i3status
+        tray_output HDMI-1-0
 }
 
 exec --no-startup-id nitrogen --restore
 
 exec --no-startup-id ~/.screenlayout/layout.sh
-
