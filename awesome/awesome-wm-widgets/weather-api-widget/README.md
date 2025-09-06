@@ -3,6 +3,7 @@
 ![Current Weather popup](./popup.png)
 
 The widget consists of one section:
+
 - current weather, including humidity, wind speed, UV index
 
 ## Customization
@@ -18,15 +19,23 @@ following config parameters:
 | units | `metric` | `metric` for celsius, `imperial` for fahrenheit |
 | icon_pack_name | `weather-underground-icons` | Name of the icon pack, could be `weather-underground-icon` or `VitalyGorbachev` or create your own, more details below |
 | icons_extension | `.png` | File extension of icons in the pack |
-| show_forecast | false | Show forecast for next three days |
+| show_forecast_on_hover | false | Show a forecast on hover, too |
+| show_daily_forecast | false | Show forecast for next three days |
+| show_hourly_forecast | false | Show hourly forecast section |
 | timeout | 120 | How often in seconds the widget refreshes |
+| lang | The language of your system from the environment (`LANG` variable) or `en`. Languages currently supported: `de`, `en`, `fr`, `pt`, `ru`. | Widget's language |
 
-### Icons:
+In [#461](https://github.com/streetturtle/awesome-wm-widgets/issues/461) it was
+reported that some machines replace the dot with a comma in coordinates. If
+this happens to you, wrap the numbers in quotation marks, e.g.
+`{"46.204400", "6.143200"}`.
+
+### Icons
 
 The widget comes with two predefined icon packs:
 
- - [weather-underground-icons](https://github.com/manifestinteractive/weather-underground-icons)
- - [VitalyGorbachev](https://www.flaticon.com/authors/vitaly-gorbachev)
+- [weather-underground-icons](https://github.com/manifestinteractive/weather-underground-icons)
+- [VitalyGorbachev](https://www.flaticon.com/authors/vitaly-gorbachev)
 
 To add your custom icons, create a folder with the pack name under `/icons` and
 use the folder name in widget's config. There should be 18 icons, preferably
@@ -41,6 +50,7 @@ widget's source.
 weather_api_widget({
     api_key='<your-key>',
     coordinates = {45.5017, -73.5673},
+    lang = 'en',
     units = 'imperial',
     font_name = 'Carter One',
     icons = 'VitalyGorbachev',
@@ -99,6 +109,7 @@ weather_api_widget({
             weather_api_widget({
                 api_key='<your-key>',
                 coordinates = {45.5017, -73.5673},
+                lang = 'en',
                 units = 'imperial',
                 font_name = 'Carter One',
                 icons = 'VitalyGorbachev',
