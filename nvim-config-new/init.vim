@@ -317,22 +317,22 @@ command! -bang -nargs=* GGrep
 " =====================================================================================================================================>
 
 " enable tabline
-let g:airline#extensions#tabline#enabled = 1
-let g:airline#extensions#tabline#left_sep = '' 
-let g:airline#extensions#tabline#left_alt_sep = ''
-let g:airline#extensions#tabline#right_sep = ''
-let g:airline#extensions#tabline#right_alt_sep = ''
+" let g:airline#extensions#tabline#enabled = 1
+" let g:airline#extensions#tabline#left_sep = '' 
+" let g:airline#extensions#tabline#left_alt_sep = ''
+" let g:airline#extensions#tabline#right_sep = ''
+" let g:airline#extensions#tabline#right_alt_sep = ''
 
 " enable powerline fonts
-let g:airline_powerline_fonts = '1'
-let g:airline_left_sep = '' 
-let g:airline_left_alt_sep = ''
-let g:airline_right_sep = ''
-let g:airline_right_alt_sep = ''
+" let g:airline_powerline_fonts = '1'
+" let g:airline_left_sep = '' 
+" let g:airline_left_alt_sep = ''
+" let g:airline_right_sep = ''
+" let g:airline_right_alt_sep = ''
 "  ☰ ⚡
 
 " Switch to your current theme
-let g:airline_theme = 'codedark'
+" let g:airline_theme = 'gruvbox'
 
 " Always show tabs
 set showtabline=2
@@ -343,11 +343,6 @@ set noshowmode
 " Command height = 1 
 set cmdheight=1
 
-"========================================================> GruvBox THEMING
-let g:gruvbox_contrast_dark = 'hard'
-let g:gruvbox_transparent_bg = 1
-let g:gruvbox_italic=1
-colorscheme gruvbox
 "========================================================> THEMING
 "colorscheme dracula
 " colorscheme onedark
@@ -357,9 +352,26 @@ colorscheme gruvbox
 " colorscheme sonokai 
 " hi Normal guibg=NONE ctermbg=NONE
 
-let g:codedark_transparent=1
-let g:codedark_italics=1
-colorscheme codedark
+" let g:codedark_transparent=1
+" let g:codedark_italics=1
+" colorscheme codedark
+
+"========================================================> GruvBox THEMING
+
+" Force consistent background when using gruvbox
+autocmd ColorScheme gruvbox hi Normal       ctermbg=NONE guibg=NONE
+autocmd ColorScheme gruvbox hi LineNr       ctermbg=NONE guibg=NONE
+autocmd ColorScheme gruvbox hi SignColumn   ctermbg=NONE guibg=NONE
+autocmd ColorScheme gruvbox hi EndOfBuffer  ctermbg=NONE guibg=NONE
+autocmd ColorScheme gruvbox hi VertSplit    ctermbg=NONE guibg=NONE
+autocmd ColorScheme gruvbox hi StatusLine   ctermbg=NONE guibg=NONE
+
+let g:airline#extensions#whitespace#enabled = 0
+
+let g:gruvbox_contrast_dark = 'hard'
+let g:gruvbox_transparent_bg = 1
+let g:gruvbox_italic=1
+colorscheme gruvbox
 
 lua <<EOF
 require'nvim-treesitter.configs'.setup {
