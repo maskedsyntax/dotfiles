@@ -38,13 +38,29 @@ echo -e "Installing Brave Browser\n"
 echo -e "===============================================\n"
 curl -fsS https://dl.brave.com/install.sh | sh
 
-
+# Language stuff
 # Installing jdk-17 & jre-17
 echo -e "===============================================\n"
 echo -e "Installing JAVA (jdk-17 & jre-17)\n"
 echo -e "===============================================\n"
 sudo apt install openjdk-17-jre-headless openjdk-17-jdk-headless
 
+# Install clangd
+sudo apt install clangd
+
+# Install latest nodejs lts
+curl -fsSL https://raw.githubusercontent.com/nvm-sh/nvm/master/install.sh | bash
+nvm install --lts
+node --version
+
+# Install golang
+wget https://go.dev/dl/go1.25.1.linux-amd64.tar.gz
+rm -rf /usr/local/go && tar -C /usr/local -xzf go1.25.1.linux-amd64.tar.gz
+echo 'export PATH=$PATH:/usr/local/go/bin' >> ~/.zshrc && source ~/.zshrc
+go version
+
+# Install Go-lsp
+go install golang.org/x/tools/gopls@latest
 
 # installing Epiphany browser
 echo -e "===============================================\n"
