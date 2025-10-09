@@ -13,9 +13,9 @@
   "icon_theme": "Zed (Default)",
   "ui_font_size": 15,
   "ui_font_family": "JetBrains Mono",
-  "ui_font_weight": 300,
-  "buffer_font_size": 15,
-  "buffer_font_family": "MonoLisa",
+  "ui_font_weight": 200,
+  "buffer_font_size": 14,
+  "buffer_font_family": "JetBrains Mono",
   "buffer_font_weight": 200,
   "buffer_line_height": {
     "custom": 1.5
@@ -26,7 +26,9 @@
     "dark": "VSCode Dark Modern"
   },
   "experimental.theme_overrides": {
-    "editor.background": "#161616",
+    "editor.background": "#151515",
+    "panel.background": "#151515",
+    "title_bar.background": "#151515",
     "syntax": {
       "comment": {
         "font_style": "italic"
