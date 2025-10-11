@@ -142,7 +142,7 @@ install_dev_tools() {
     echo -e "===============================================\n"
     echo -e "Installing Dev Tools: GitHub Desktop, GIMP, Krita, OBS Studio\n"
     echo -e "===============================================\n"
-    yay -S --needed postman-bin insomnia-bin github-desktop-bin gimp krita obs-studio --noconfirm
+    yay -S --needed postman-bin insomnia-bin gimp krita obs-studio --noconfirm
     check_success "Development tools installation"
 }
 
