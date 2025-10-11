@@ -5,86 +5,83 @@
 # If not running interactively, don't do anything
 [[ $- != *i* ]] && return
 
-[[ -f ~/.welcome_screen ]] && . ~/.welcome_screen
-
-_set_liveuser_PS1() {
-    PS1='[\[\e[31m\]\u\[\e[00m\]\[\e[37m\]@\[\e[36m\]\h\[\e[00m\] \[\e[35m\]\w\[\e[00m\]]\$ '
-    if [ "$(whoami)" = "liveuser" ] ; then
-        local iso_version="$(grep ^VERSION= /usr/lib/endeavouros-release 2>/dev/null | cut -d '=' -f 2)"
-        if [ -n "$iso_version" ] ; then
-            local prefix="eos-"
-            local iso_info="$prefix$iso_version"
-            PS1="[\u@$iso_info \w]\$ "
-        fi
-    fi
-}
-_set_liveuser_PS1
-unset -f _set_liveuser_PS1
-
-ShowInstallerIsoInfo() {
-    local file=/usr/lib/endeavouros-release
-    if [ -r $file ] ; then
-        cat $file
-    else
-        echo "Sorry, installer ISO info is not available." >&2
-    fi
-}
-
-
 alias ls='ls --color=auto'
-alias ll='ls -lav --ignore=..'   # show long listing of all except ".."
-alias l='ls -lav --ignore=.?*'   # show long listing but no hidden dotfiles except "."
+alias grep='grep --color=auto'
 
-[[ "$(whoami)" = "root" ]] && return
+# Check if the terminal supports colors
+if [ -t 1 ]; then
+  # Define colors with \[ \] for use in PS1
+  RED='\[\033[0;31m\]'
+  CYAN='\[\033[0;36m\]'
+  MAGENTA='\[\033[0;35m\]'
+  YELLOW='\[\033[0;33m\]'
+  WHITE='\[\033[1;37m\]'
+  NC='\[\033[0m\]'
+  # Define colors without \[ \] for use in git_prompt_info
+  RAW_RED='\033[0;31m'
+  RAW_CYAN='\033[0;36m'
+  RAW_YELLOW='\033[0;33m'
+  RAW_NC='\033[0m'
+else
+  # Fallback to no colors if terminal doesn't support them
+  RED=''
+  CYAN=''
+  MAGENTA=''
+  YELLOW=''
+  WHITE=''
+  NC=''
+  RAW_RED=''
+  RAW_CYAN=''
+  RAW_YELLOW=''
+  RAW_NC=''
+fi
 
-[[ -z "$FUNCNEST" ]] && export FUNCNEST=100          # limits recursive functions, see 'man bash'
+# Git prompt function
+function git_prompt_info() {
+  # Check if inside a Git repository
+  if ! git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+    echo ""
+    return
+  fi
 
-## Use the up and down arrow keys for finding a command in history
-## (you can write some initial letters of the command first).
-bind '"\e[A":history-search-backward'
-bind '"\e[B":history-search-forward'
+  # Get the current branch
+  local branch
+  branch=$(git symbolic-ref --short HEAD 2>/dev/null || git rev-parse --short HEAD 2>/dev/null)
 
-################################################################################
-## Some generally useful functions.
-## Consider uncommenting aliases below to start using these functions.
-##
-## October 2021: removed many obsolete functions. If you still need them, please look at
-## https://github.com/EndeavourOS-archive/EndeavourOS-archiso/raw/master/airootfs/etc/skel/.bashrc
+  # Initialize status indicators
+  local staged=""
+  local unstaged=""
+  local untracked=""
 
-_open_files_for_editing() {
-    # Open any given document file(s) for editing (or just viewing).
-    # Note1:
-    #    - Do not use for executable files!
-    # Note2:
-    #    - Uses 'mime' bindings, so you may need to use
-    #      e.g. a file manager to make proper file bindings.
+  # Parse git status
+  local status_output
+  status_output=$(git status --porcelain 2>/dev/null)
 
-    if [ -x /usr/bin/exo-open ] ; then
-        echo "exo-open $@" >&2
-        setsid exo-open "$@" >& /dev/null
-        return
-    fi
-    if [ -x /usr/bin/xdg-open ] ; then
-        for file in "$@" ; do
-            echo "xdg-open $file" >&2
-            setsid xdg-open "$file" >& /dev/null
-        done
-        return
-    fi
+  # Debug: Log the status_output to a file for inspection
+  echo "$status_output" > /tmp/git_prompt_debug.log
 
-    echo "$FUNCNAME: package 'xdg-utils' or 'exo' is required." >&2
+  # Check for staged changes (lines starting with M, A, D, R, or C in the first column)
+  if echo "$status_output" | grep -q '^[MADRC][ MTD]'; then
+    staged="${RAW_YELLOW}+"
+  fi
+
+  # Check for unstaged changes (lines with M or D in the second column)
+  if echo "$status_output" | grep -q '^.[MD]'; then
+    unstaged="${RAW_RED}*"
+  fi
+
+  # Check for untracked files (lines starting with ??)
+  if echo "$status_output" | grep -E '^\?\?'; then
+    untracked="${RAW_RED}?"
+  fi
+
+  # Construct the Git prompt
+  echo "(${RAW_CYAN}${branch}${staged}${unstaged}${untracked}${RAW_NC})"
 }
 
-#------------------------------------------------------------
+# Set PROMPT_COMMAND to ensure dynamic updates
+PROMPT_COMMAND='PS1="[${RED}\u${NC}${WHITE}@${CYAN}\h${NC} ${MAGENTA}\w${NC}] \[$(git_prompt_info)\] "'
 
-## Aliases for the functions above.
-## Uncomment an alias if you want to use it.
-##
 
-# alias ef='_open_files_for_editing'     # 'ef' opens given file(s) for editing
-# alias pacdiff=eos-pacdiff
-################################################################################
-
-# BEGIN_KITTY_SHELL_INTEGRATION
-if test -n "$KITTY_INSTALLATION_DIR" -a -e "$KITTY_INSTALLATION_DIR/shell-integration/bash/kitty.bash"; then source "$KITTY_INSTALLATION_DIR/shell-integration/bash/kitty.bash"; fi
-# END_KITTY_SHELL_INTEGRATION
+# PS1='[\u@\h \W]\$ '
+export PATH=$HOME/.local/bin:$PATH
