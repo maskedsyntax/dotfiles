@@ -1,0 +1,106 @@
+[colors.cursor]
+cursor = "CellForeground"
+text = "CellBackground"
+
+[colors.primary]
+background = "#111111"
+foreground = "#c5c8c6"
+
+[cursor]
+thickness = 0.1
+
+[font]
+size = 10
+
+[font.bold]
+family = "SF Mono"
+style = "Bold"
+
+[font.bold_italic]
+family = "SF Mono"
+style = "Bold Italic"
+
+[font.glyph_offset]
+x = 0
+y = 0
+
+[font.italic]
+family = "SF Mono"
+style = "Italic"
+
+[font.normal]
+family = "SF Mono"
+style = "Regular"
+
+[font.offset]
+x = 0
+y = 0
+
+[[keyboard.bindings]]
+action = "Paste"
+key = "V"
+mods = "Shift|Control"
+
+[[keyboard.bindings]]
+action = "Copy"
+key = "C"
+mods = "Shift|Control"
+
+[[keyboard.bindings]]
+action = "ClearLogNotice"
+key = "L"
+mods = "Control"
+
+[[keyboard.bindings]]
+chars = "\f"
+key = "L"
+mode = "~Vi|~Search"
+mods = "Control"
+
+[[keyboard.bindings]]
+action = "ScrollPageUp"
+key = "PageUp"
+mode = "~Alt"
+mods = "Shift"
+
+[[keyboard.bindings]]
+action = "ScrollPageDown"
+key = "PageDown"
+mode = "~Alt"
+mods = "Shift"
+
+[[keyboard.bindings]]
+action = "ScrollToTop"
+key = "Home"
+mode = "~Alt"
+mods = "Shift"
+
+[[keyboard.bindings]]
+action = "ScrollToBottom"
+key = "End"
+mode = "~Alt"
+mods = "Shift"
+
+[mouse]
+hide_when_typing = false
+
+[[mouse.bindings]]
+action = "PasteSelection"
+mouse = "Middle"
+
+[selection]
+save_to_clipboard = true
+
+[shell]
+program = "/bin/bash"
+
+[window]
+dynamic_padding = false
+
+[window.dimensions]
+columns = 130
+lines = 50
+
+[window.padding]
+x = 4
+y = 2
