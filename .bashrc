@@ -52,13 +52,11 @@ git_prompt_info() {
     untracked="${RAW_RED}?"
   fi
 
-  # Proper color reset after symbols so the closing ) is not tinted
+  # git prompt info
   echo "(${RAW_CYAN}${branch}${RAW_NC}${staged}${unstaged}${untracked}${RAW_NC})"
 }
 
-# Proper PS1
-# - includes color reset at the very end
-# - includes $ for clarity
+# New PS1
 PS1="[${RED}\u${NC}${WHITE}@${CYAN}\h${NC} ${MAGENTA}\w${NC}] \[\$(git_prompt_info)\]${NC} \$ "
 
 # Export PATH
