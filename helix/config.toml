@@ -1,0 +1,22 @@
+# theme = "kanagawa-dragon"
+theme = "msdark"
+
+[editor]
+line-number = "relative"
+scrolloff = 8
+mouse = true
+
+[editor.cursor-shape]
+insert = "bar"
+normal = "block"
+select = "underline"
+
+[editor.statusline]
+left = ["mode", "spinner", "file-name"]
+center = ["version-control"]
+right = ["diagnostics", "selections", "position", "file-encoding"]
+
+[editor.lsp]
+display-messages = true
+auto-signature-help = true
+# auto-format = false

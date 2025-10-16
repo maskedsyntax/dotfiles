@@ -1,0 +1,8 @@
+inherits = "gruvbox_dark_hard"
+
+# change the gutter (line number area)
+"ui.gutter" = { bg = "#181818" }
+"ui.background" = {bg = "#181818"}
+"ui.cursor" = { fg = "#000000", bg = "#ffffff" }
+"ui.selection" = { bg = "gray" }
+'ui.linenr' = { bg = '181818', fg = 'greyL' }
