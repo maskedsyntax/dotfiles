@@ -1,9 +1,8 @@
-# theme = "kanagawa-dragon"
 theme = "msdark"
 
 [editor]
 line-number = "relative"
-scrolloff = 8
+scrolloff = 6
 mouse = true
 
 [editor.cursor-shape]
@@ -12,11 +11,47 @@ normal = "block"
 select = "underline"
 
 [editor.statusline]
-left = ["mode", "spinner", "file-name"]
-center = ["version-control"]
+left = ["mode", "spinner", "file-name", "version-control"]
+center = []
 right = ["diagnostics", "selections", "position", "file-encoding"]
 
+[editor.file-picker]
+hidden = false
+git-ignore = true
+
 [editor.lsp]
+enable = true
 display-messages = true
 auto-signature-help = true
-# auto-format = false
+snippets = true
+
+[keys.normal]
+"H" = "goto_line_start"
+"L" = "goto_line_end"
+"U" = "half_page_up"
+"D" = "half_page_down"
+
+# Better window navigation
+"C-h" = ["jump_view_left"]
+"C-j" = ["jump_view_down"]
+"C-k" = ["jump_view_up"]
+"C-l" = ["jump_view_right"]
+
+# Window Management
+"C-|" = ["vsplit"]
+"A-|" = ["hsplit"]
+
+# copy to system clipboard
+"y" = ["yank_to_clipboard"]
+
+# Global search/replace
+# "<leader>s" = ["global_search"]
+"A-r" = ["global_search", "replace"]
+
+[keys.select]
+"V" = "extend_line_below"
+"esc" = "normal_mode"
+
+[keys.normal.space]
+"q" = [":quit-all"]
+"l" = ["vsplit", "goto_definition"]

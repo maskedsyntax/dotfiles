@@ -1,8 +1,17 @@
-inherits = "gruvbox_dark_hard"
+inherits = "varua"
 
 # change the gutter (line number area)
 "ui.gutter" = { bg = "#181818" }
-"ui.background" = {bg = "#181818"}
-"ui.cursor" = { fg = "#000000", bg = "#ffffff" }
-"ui.selection" = { bg = "gray" }
-'ui.linenr' = { bg = '181818', fg = 'greyL' }
+"ui.linenr" = { bg = "181818"}
+
+# change editor background
+"ui.background" = {bg = "#101010"}
+
+# Cursor styling
+"ui.cursor" = { bg = "#ffffff" }
+"ui.cursor.primary" = { fg = "#000000", bg = "#ffffff" }
+"ui.cursor.insert" = { bg = "#ffffff" }
+"ui.cursor.select" = { bg = "#ffffff" }
+
+"ui.selection" = { bg = "#555555" }           # general selection
+"ui.selection.primary" = { bg = "#555555" }   # main selection (used most often)

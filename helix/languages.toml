@@ -1,0 +1,114 @@
+# ================================
+# C / C++
+# ================================
+[[language]]
+name = "c"
+language-servers = ["clangd"]
+formatter = { command = "clang-format", args = ["--style=file"] }
+auto-format = true
+file-types = ["c", "h"]
+indent = { tab-width = 4, unit = "    " }
+
+[[language]]
+name = "cpp"
+language-servers = ["clangd"]
+formatter = { command = "clang-format", args = ["--style=file"] }
+auto-format = true
+file-types = ["cpp", "hpp", "cc", "cxx", "hxx"]
+indent = { tab-width = 4, unit = "    " }
+
+# ================================
+# Rust
+# ================================
+[[language]]
+name = "rust"
+language-servers = ["rust-analyzer"]
+formatter = { command = "rustfmt" }
+auto-format = true
+roots = ["Cargo.toml"]
+
+# ================================
+# Python
+# ================================
+[[language]]
+name = "python"
+language-servers = ["pyright", "ruff-lsp"]
+formatter = { command = "black", args = ["-"] }
+auto-format = true
+roots = ["pyproject.toml", "setup.py", "setup.cfg", "requirements.txt"]
+comment-token = "#"
+
+# ================================
+# Go
+# ================================
+[[language]]
+name = "go"
+roots = ["go.work", "go.mod"]
+language-servers = ["gopls", "golangci-lint-lsp"]
+formatter = { command = "gofmt" }
+auto-format = true
+comment-token = "//"
+
+[language-server.gopls.config]
+"formatting.gofumpt" = true
+
+[language-server.golangci-lint-lsp.config]
+command = ["golangci-lint", "run", "--out-format", "json", "--issues-exit-code=1"]
+
+# ================================
+# Bash / Shell
+# ================================
+[[language]]
+name = "bash"
+language-servers = ["bash-language-server"]
+formatter = { command = "shfmt", args = ["-i", "4", "-ci"] }
+auto-format = true
+file-types = ["sh", "bash", "zsh"]
+comment-token = "#"
+
+# ================================
+# TOML
+# ================================
+[[language]]
+name = "toml"
+language-servers = ["taplo"]
+formatter = { command = "taplo", args = ["format", "-"] }
+auto-format = true
+
+# ================================
+# YAML
+# ================================
+[[language]]
+name = "yaml"
+language-servers = ["yaml-language-server"]
+auto-format = true
+formatter = { command = "prettier", args = ["--parser", "yaml"] }
+file-types = ["yaml", "yml"]
+
+[language-server.yaml-language-server.config]
+yaml = { validate = true, hover = true, completion = true }
+
+# ================================
+# JSON
+# ================================
+[[language]]
+name = "json"
+language-servers = ["vscode-json-language-server"]
+formatter = { command = "prettier", args = ["--parser", "json"] }
+auto-format = true
+file-types = ["json"]
+
+[language-server.vscode-json-language-server.config]
+json = { validate = { enable = true }, format = { enable = true } }
+provideFormatter = true
+
+# ================================
+# CSV
+# ================================
+[[language]]
+name = "csv"
+scope = "source.csv"
+file-types = ["csv"]
+comment-token = "#"
+# No LSP needed, just highlighting
+
