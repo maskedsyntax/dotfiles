@@ -55,3 +55,4 @@ snippets = true
 [keys.normal.space]
 "q" = [":quit-all"]
 "l" = ["vsplit", "goto_definition"]
+"v" = [":clipboard-paste-replace"]
