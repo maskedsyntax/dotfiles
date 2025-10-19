@@ -4,6 +4,7 @@ theme = "msdark"
 line-number = "relative"
 scrolloff = 6
 mouse = true
+bufferline = "always"
 
 [editor.cursor-shape]
 insert = "bar"
@@ -41,16 +42,18 @@ snippets = true
 "C-|" = ["vsplit"]
 "A-|" = ["hsplit"]
 
-# copy to system clipboard
-"y" = ["yank_to_clipboard"]
-
 # Global search/replace
 # "<leader>s" = ["global_search"]
 "A-r" = ["global_search", "replace"]
 
+"y" = [":clipboard-yank", "yank"]
+
+"esc" = ["collapse_selection", "keep_primary_selection"]
+
 [keys.select]
 "V" = "extend_line_below"
 "esc" = "normal_mode"
+"y" = [":clipboard-yank", "yank"]
 
 [keys.normal.space]
 "q" = [":quit-all"]
