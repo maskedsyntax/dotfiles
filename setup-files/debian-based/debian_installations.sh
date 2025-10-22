@@ -9,7 +9,7 @@ sudo apt update && sudo apt upgrade -y
 
 # Basic tools & dev essentials
 sudo apt install -y \
-    build-essential curl wget unzip git python3-pip clang clangd clang-format black shfmt \
+    build-essential curl zsh wget unzip git python3-pip clang clangd clang-format black shfmt \
     vim-gtk3 htop neofetch xsel nodejs npm yarn tree tmux ubuntu-restricted-extras \
     fonts-firacode fonts-cascadia-code fonts-jetbrains-mono fonts-ibm-plex \
     alacritty kitty \
@@ -17,7 +17,7 @@ sudo apt install -y \
     gimp krita inkscape obs-studio vlc mpv geany dconf-editor \
     epiphany-browser \
     cmake ninja-build gdb lldb valgrind cloc flatpak \
-    dmz-cursor-theme thunar pavucontrol gnuplot flameshot fastfetch
+    dmz-cursor-theme thunar pavucontrol gnuplot flameshot neofetch
 
 # Install Papirus Icon Pack
 echo -e "===============================================\n"
@@ -88,7 +88,7 @@ cargo install taplo-cli
 echo -e "===============================================\n"
 echo -e "Installing Language Servers & Formatters\n"
 echo -e "===============================================\n"
-npm install -g \
+sudo npm install -g \
     pyright \
     bash-language-server \
     yaml-language-server \
@@ -107,8 +107,7 @@ sudo apt-get install sublime-text -y
 echo -e "===============================================\n"
 echo -e "Installing lldb-dap-20 and creating symlink\n"
 echo -e "===============================================\n"
-sudo apt install -y lldb-dap-20
-sudo ln -sf /usr/bin/lldb-dap-20 /usr/local/bin/lldb-dap
+sudo ln -sf /usr/bin/lldb-dap-18 /usr/local/bin/lldb-dap
 
 echo -e "===============================================\n"
 echo -e "Installing Chromium via Flatpak\n"
