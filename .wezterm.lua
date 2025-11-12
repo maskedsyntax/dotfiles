@@ -5,11 +5,13 @@ local wezterm = require 'wezterm'
 local config = {}
 
 -- or, changing the font size and color scheme.
-config.font_size = 8
+config.font_size = 11
 config.font = wezterm.font 'MonoLisa'
-config.color_scheme = 'GruvboxDarkHard'
+-- config.font = wezterm.font 'Cascadia Code'
+-- config.color_scheme = 'GruvboxDarkHard'
 
-config.window_background_opacity = 0.8
+config.window_background_opacity = 0.9
+config.tab_bar_at_bottom = true
 
 -- Keybindings for splitting panes
 config.keys = {
