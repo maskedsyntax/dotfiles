@@ -61,6 +61,11 @@ nvm install --lts
 node --version
 
 echo -e "===============================================\n"
+echo -e "Installing Bun\n"
+echo -e "===============================================\n"
+curl -fsSL https://bun.sh/install | bash
+
+echo -e "===============================================\n"
 echo -e "Installing Go 1.25.3\n"
 echo -e "===============================================\n"
 wget https://go.dev/dl/go1.25.3.linux-amd64.tar.gz
