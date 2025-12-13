@@ -5,5 +5,4 @@ TP_ID=$(xinput list | grep -i touchpad | grep -o 'id=[0-9]*' | cut -d= -f2)
 xinput set-prop "$TP_ID" "libinput Natural Scrolling Enabled" 1
 xinput set-prop "$TP_ID" "libinput Tapping Enabled" 1
 
-setxkbmap -option caps:swapescape
 
