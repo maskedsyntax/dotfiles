@@ -1,0 +1,17 @@
+# Raviz Configuration
+
+[render]
+fps = 30
+sphere_lat = 40
+sphere_lon = 40
+rotation_speed = 0.05
+window_opacity = 0.8 
+color_mode = "none" # none, static, reactive
+
+[audio]
+rate = 44100
+fft_size = 512
+fft_bins = 64
+smoothing = 0.15
+intensity = 1.0
+device = "alsa_output.pci-0000_00_1f.3.analog-stereo.monitor"
