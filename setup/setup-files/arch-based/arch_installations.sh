@@ -32,7 +32,19 @@ sudo pacman -Syu --noconfirm
 print_status "Installing base-devel and git..."
 sudo pacman -S --needed base-devel git --noconfirm
 
-# 3. Install AUR Helper: yay
+# 3. Git Configuration
+setup_git() {
+    print_status "Configuring Git..."
+    git config --global user.name "maskedsyntax"
+    git config --global user.email "aftaab@aftaab.xyz"
+    git config --global credential.helper store
+    git config --global core.editor "vim"
+    git config --global pull.rebase true
+    git config --global init.defaultBranch master
+}
+setup_git
+
+# 4. Install AUR Helper: yay
 if ! command -v yay &> /dev/null; then
     print_status "Installing yay (AUR helper)..."
     TEMP_DIR=$(mktemp -d)
@@ -45,37 +57,44 @@ else
     print_status "yay is already installed."
 fi
 
-# 4. Essential CLI Tools
+# 5. Essential CLI Tools
 print_status "Installing essential CLI tools..."
 sudo pacman -S --needed \
     vim gvim neovim xsel htop fastfetch \
     zsh tree tmux wget unzip curl \
     bash-completion openssh cloc \
-    nodejs npm yarn bun-bin \
-    python-pip python-pyright \
+    nodejs npm yarn \
+    python-pip \
     ripgrep fd findutils --noconfirm
 
-# 5. Development Environments (Languages)
-print_status "Installing Development Environments..."
-# Java
-sudo pacman -S --needed jdk-openjdk --noconfirm
+# 6. Programming Languages (JDK, Go, Rust, Flutter, Dart)
+print_status "Installing Programming Languages..."
+sudo pacman -S --needed jdk-openjdk go --noconfirm
+
 # Rust
 if ! command -v rustup &> /dev/null; then
     curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
     source "$HOME/.cargo/env"
 fi
-# Go
-sudo pacman -S --needed go --noconfirm
 
-# 6. Fonts
+# Flutter & Dart (Manual Installation to /opt)
+if [ ! -d "/opt/flutter" ]; then
+    print_status "Installing Flutter and Dart to /opt..."
+    sudo git clone https://github.com/flutter/flutter.git -b stable /opt/flutter
+    sudo chown -R $USER:$USER /opt/flutter
+    if ! grep -q "/opt/flutter/bin" ~/.zshrc; then
+        echo 'export PATH="$PATH:/opt/flutter/bin"' >> ~/.zshrc
+    fi
+fi
+
+# 7. Fonts
 print_status "Installing Fonts..."
 sudo pacman -S --needed \
     ttf-cascadia-code ttf-jetbrains-mono ttf-fira-code \
     adobe-source-code-pro-fonts --noconfirm
 
-# 7. GUI Applications (Browsers, IDEs, etc.)
+# 8. GUI Applications
 print_status "Installing GUI Applications..."
-# Standard Repos
 sudo pacman -S --needed \
     vlc mpv gimp krita inkscape obs-studio \
     pavucontrol nitrogen flameshot \
@@ -84,29 +103,56 @@ sudo pacman -S --needed \
 # AUR Apps
 yay -S --needed \
     google-chrome brave-bin visual-studio-code-bin \
-    sublime-text-4 jetbrains-toolbox \
+    sublime-text-4 spotify \
     postman-bin insomnia-bin youtube-music-bin \
-    telegram-desktop-bin whatsapp-for-linux \
-    discord slack-desktop --noconfirm
+    telegram-desktop-bin discord slack-desktop --noconfirm
 
-# 8. Specialty Editors (via scripts)
-print_status "Installing Zed and Helix..."
+# 9. Specialty Editors & AI Tools
+print_status "Installing Specialty Editors & AI Tools..."
 curl -f https://zed.dev/install.sh | sh
 sudo pacman -S --needed helix --noconfirm
+yay -S --needed cursor-bin --noconfirm
+sudo npm install -g @google/gemini-cli @anthropic-ai/claude-code
 
-# 9. Flatpak (Optional support)
-print_status "Ensuring Flatpak is installed..."
-sudo pacman -S --needed flatpak --noconfirm
+# 10. Android Studio & IntelliJ (Manual Installation to /opt)
+install_jetbrains_manual() {
+    local name=$1
+    local url=$2
+    local target_dir="/opt/$name"
+    if [ ! -d "$target_dir" ]; then
+        print_status "Installing $name to /opt..."
+        local temp_tar=$(mktemp)
+        curl -L "$url" -o "$temp_tar"
+        sudo mkdir -p "$target_dir"
+        sudo tar -xzf "$temp_tar" -C "$target_dir" --strip-components=1
+        sudo chown -R $USER:$USER "$target_dir"
+        rm "$temp_tar"
+        
+        local exec_path="$target_dir/bin/${name/android-studio/studio}.sh"
+        if [ "$name" == "intellij-idea" ]; then exec_path="$target_dir/bin/idea.sh"; fi
+        
+        cat <<EOF | sudo tee /usr/share/applications/$name.desktop
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=$name
+Icon=$target_dir/bin/${name/android-studio/studio}.png
+Exec="$exec_path" %f
+Comment=Professional IDE
+Categories=Development;IDE;
+Terminal=false
+StartupWMClass=jetbrains-${name/intellij-idea/idea}
+EOF
+    fi
+}
 
-# 10. Shell Customization
+install_jetbrains_manual "android-studio" "https://redirector.gvt1.com/edgedl/android/studio/ide-zips/2024.3.1.13/android-studio-2024.3.1.13-linux.tar.gz"
+install_jetbrains_manual "intellij-idea" "https://download.jetbrains.com/product?code=IIC&latest&type=release&platform=linux"
+
+# 11. Shell Customization
 if [ ! -d "$HOME/.oh-my-zsh" ]; then
     print_status "Installing Oh My Zsh..."
     sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
 fi
-
-# 11. AI Tools
-print_status "Installing AI Tools (Cursor, Gemini CLI, Claude Code)..."
-yay -S --needed cursor-bin --noconfirm
-sudo npm install -g @google/gemini-cli @anthropic-ai/claude-code
 
 print_status "Arch Setup Complete! Check $LOGFILE for details."
