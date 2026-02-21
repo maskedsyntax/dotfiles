@@ -14,17 +14,19 @@ my $home_dir = $ENV{HOME};
 my $install = 0;
 my $push    = 0;
 my $verbose = 0;
+my $status  = 0;
 my $message = "Sync dotfiles: " . scalar(localtime());
 
 GetOptions(
     'install'   => \$install,
     'push'      => \$push,
+    'status|s'  => \$status,
     'verbose|v' => \$verbose,
     'message=s' => \$message,
-) or die "Usage: $0 [--install] [--push] [--verbose|-v] [--message 'commit message']\n";
+) or die "Usage: $0 [--install] [--push] [--status|-s] [--verbose|-v] [--message 'commit message']\n";
 
 # Default to install if no options provided
-$install = 1 if !$install && !$push;
+$install = 1 if !$install && !$push && !$status;
 
 sub create_symlink {
     my ($source, $target) = @_;
@@ -111,9 +113,9 @@ sub push_changes {
     system("git add .");
     
     # Check if there are changes to commit
-    my $status = `git status --porcelain`;
-    if ($status) {
-        print "\nChanges detected:\n$status\n" if $verbose;
+    my $status_text = `git status --porcelain`;
+    if ($status_text) {
+        print "\nChanges detected:\n$status_text\n" if $verbose;
         print "Committing changes: $message\n";
         system("git", "commit", "-m", $message);
         print "Pushing to GitHub...\n";
@@ -124,7 +126,35 @@ sub push_changes {
     }
 }
 
+sub show_status {
+    print "\n--- Checking status against GitHub ---\n";
+    chdir($dotfiles_dir) or die "Could not change to $dotfiles_dir: $!";
+    
+    # Fetch latest updates from remote
+    print "Fetching remote updates...\n";
+    system("git fetch origin master --quiet");
+    
+    # Get changes against remote
+    my $local_changes = `git status --short`;
+    my $remote_diff = `git rev-list HEAD..origin/master --count`;
+    chomp($remote_diff);
+    
+    if ($local_changes || $remote_diff > 0) {
+        if ($local_changes) {
+            print "\nLocal changes (not pushed):\n";
+            print $local_changes;
+        }
+        if ($remote_diff > 0) {
+            print "\nRemote changes detected! You are $remote_diff commits behind origin/master.\n";
+            print "Run with --push to pull and merge these changes.\n";
+        }
+    } else {
+        print "\nYour dotfiles are up to date with origin/master.\n";
+    }
+}
+
 # Execute requested actions
+show_status() if $status;
 deploy_links() if $install;
 push_changes() if $push;
 
