@@ -167,7 +167,19 @@ xdg-mime default org.kde.okular.desktop application/pdf
 xdg-mime default viewnior.desktop image/png image/jpeg image/gif
 xdg-mime default thunar.desktop inode/directory
 
-# 14. Shell Customization
+# 14. Vim-Plug Setup
+setup_vim_plug() {
+    print_status "Installing vim-plug for Vim..."
+    curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
+        https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+    
+    print_status "Installing vim-plug for Neovim..."
+    sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs \
+        https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+}
+setup_vim_plug
+
+# 15. Shell Customization
 if [ ! -d "$HOME/.oh-my-zsh" ]; then
     print_status "Installing Oh My Zsh..."
     sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
