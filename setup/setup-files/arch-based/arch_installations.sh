@@ -1,232 +1,112 @@
 #!/bin/bash
 
 # ============================================
-# Arch Linux Setup Script
+# Arch Linux Professional Setup Script
 # ============================================
 
-# Log file location
+set -e # Exit on error
+
+# Log file
 LOGFILE="$HOME/arch_setup.log"
-exec &> >(tee -a "$LOGFILE")  # Log all output to the log file
+exec &> >(tee -a "$LOGFILE")
 
-# Function to check for command success
-check_success() {
-    if [[ $? -ne 0 ]]; then
-        echo -e "\nERROR: $1 failed. Exiting script.\n" | tee -a "$LOGFILE"
-        exit 1
-    fi
+# Colors for output
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+BLUE='\033[0;34m'
+NC='\033[0m' # No Color
+
+print_status() {
+    echo -e "${BLUE}==>${NC} ${GREEN}$1${NC}"
 }
 
-# Function to install packages using pacman or yay
-install_package() {
-    PACKAGE=$1
-    INSTALLER=$2
-    if ! pacman -Q "$PACKAGE" &>/dev/null; then
-        echo -e "Installing $PACKAGE..."
-        $INSTALLER $PACKAGE --noconfirm
-        check_success "$PACKAGE installation"
-    else
-        echo -e "$PACKAGE is already installed. Skipping...\n"
-    fi
+print_error() {
+    echo -e "${RED}ERROR:${NC} $1"
 }
 
-# Function to update the system
-update_system() {
-    echo -e "===============================================\n"
-    echo -e "Updating the system...\n"
-    echo -e "===============================================\n"
-    sudo pacman -Syu --noconfirm
-    check_success "System update"
-}
+# 1. Update System
+print_status "Updating system..."
+sudo pacman -Syu --noconfirm
 
-# ============================================
-# Install Base Development Tools
-# ============================================
-install_base_tools() {
-    echo -e "===============================================\n"
-    echo -e "Installing Base Development Tools: base-devel, git\n"
-    echo -e "===============================================\n"
-    sudo pacman -S --needed base-devel git --noconfirm
-    check_success "Base development tools installation"
-}
+# 2. Install Base Development Tools & Git
+print_status "Installing base-devel and git..."
+sudo pacman -S --needed base-devel git --noconfirm
 
-# ============================================
-# Install AUR Helper: yay
-# ============================================
-install_yay() {
-    echo -e "===============================================\n"
-    echo -e "Installing AUR helper: yay\n"
-    echo -e "===============================================\n"
-    if ! pacman -Q yay &>/dev/null; then
-        git clone https://aur.archlinux.org/yay.git
-        check_success "Git clone yay"
-        cd yay
-        makepkg -si --noconfirm
-        check_success "yay installation"
-        cd ~
-    else
-        echo -e "yay is already installed. Skipping...\n"
-    fi
-}
+# 3. Install AUR Helper: yay
+if ! command -v yay &> /dev/null; then
+    print_status "Installing yay (AUR helper)..."
+    TEMP_DIR=$(mktemp -d)
+    git clone https://aur.archlinux.org/yay.git "$TEMP_DIR"
+    cd "$TEMP_DIR"
+    makepkg -si --noconfirm
+    cd -
+    rm -rf "$TEMP_DIR"
+else
+    print_status "yay is already installed."
+fi
 
-# ============================================
-# Installing Essential Apps
-# ============================================
-install_essential_apps() {
-    echo -e "===============================================\n"
-    echo -e "Installing essential apps: Vim, Neovim, xsel, nodejs, npm, yarn, zsh, tree, tmux\n"
-    echo -e "===============================================\n"
-    sudo pacman -S --needed gvim pavucontrol nitrogen htop neovim fastfetch xsel nodejs npm yarn zsh tree tmux --noconfirm
-    check_success "Essential apps installation"
-}
+# 4. Essential CLI Tools
+print_status "Installing essential CLI tools..."
+sudo pacman -S --needed \
+    vim gvim neovim xsel htop fastfetch \
+    zsh tree tmux wget unzip curl \
+    bash-completion openssh cloc \
+    nodejs npm yarn bun-bin \
+    python-pip python-pyright \
+    ripgrep fd findutils --noconfirm
 
-# ============================================
-# Installing Fonts
-# ============================================
-install_fonts() {
-    echo -e "===============================================\n"
-    echo -e "Installing Fonts: Courier-Code, JetBrainsMono, FiraCode\n"
-    echo -e "===============================================\n"
-    yay -S --needed ttf-courier-code ttf-jetbrains-mono ttf-fira-code --noconfirm
-    check_success "Font installation"
-}
+# 5. Development Environments (Languages)
+print_status "Installing Development Environments..."
+# Java
+sudo pacman -S --needed jdk-openjdk --noconfirm
+# Rust
+if ! command -v rustup &> /dev/null; then
+    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+    source "$HOME/.cargo/env"
+fi
+# Go
+sudo pacman -S --needed go --noconfirm
 
-# ============================================
-# Installing Java (JDK & JRE)
-# ============================================
-install_java() {
-    echo -e "===============================================\n"
-    echo -e "Installing JAVA (Latest: jdk-23 & jre-23)\n"
-    echo -e "===============================================\n"
-    yay -S --needed jdk --noconfirm
-    check_success "Java installation"
-}
+# 6. Fonts
+print_status "Installing Fonts..."
+sudo pacman -S --needed \
+    ttf-cascadia-code ttf-jetbrains-mono ttf-fira-code \
+    adobe-source-code-pro-fonts --noconfirm
 
-# ============================================
-# Installing Zed
-# ============================================
-install_zed() {
-    echo -e "===============================================\n"
-    echo -e "Installing Browsers: Google Chrome, Epiphany, Brave\n"
-    echo -e "===============================================\n"
-    curl -f https://zed.dev/install.sh | sh
-    check_success "Zed installation"
-}
+# 7. GUI Applications (Browsers, IDEs, etc.)
+print_status "Installing GUI Applications..."
+# Standard Repos
+sudo pacman -S --needed \
+    vlc mpv gimp krita inkscape obs-studio \
+    pavucontrol nitrogen flameshot \
+    alacritty kitty thunar epiphany --noconfirm
 
-# ============================================
-# Installing Browsers
-# ============================================
-install_browsers() {
-    echo -e "===============================================\n"
-    echo -e "Installing Browsers: Google Chrome, Epiphany, Brave\n"
-    echo -e "===============================================\n"
-    curl -fsS https://dl.brave.com/install.sh | sh
-    check_success "Browser installation"
-}
+# AUR Apps
+yay -S --needed \
+    google-chrome brave-bin visual-studio-code-bin \
+    sublime-text-4 jetbrains-toolbox \
+    postman-bin insomnia-bin youtube-music-bin \
+    telegram-desktop-bin whatsapp-for-linux \
+    discord slack-desktop --noconfirm
 
-# ============================================
-# Installing IDEs and Text Editors
-# ============================================
-install_ides_and_editors() {
-    echo -e "===============================================\n"
-    echo -e "Installing IDEs and Text Editors\n"
-    echo -e "===============================================\n"
-    yay -S --needed jetbrains-toolbox visual-studio-code-bin --noconfirm
-    yay -S --needed sublime-text-4 --noconfirm
-    check_success "IDEs and text editors installation"
-}
+# 8. Specialty Editors (via scripts)
+print_status "Installing Zed and Helix..."
+curl -f https://zed.dev/install.sh | sh
+sudo pacman -S --needed helix --noconfirm
 
-# ============================================
-# Installing Development Tools
-# ============================================
-install_dev_tools() {
-    echo -e "===============================================\n"
-    echo -e "Installing Dev Tools: GitHub Desktop, GIMP, Krita, OBS Studio\n"
-    echo -e "===============================================\n"
-    yay -S --needed postman-bin insomnia-bin gimp krita obs-studio --noconfirm
-    check_success "Development tools installation"
-}
+# 9. Flatpak (Optional support)
+print_status "Ensuring Flatpak is installed..."
+sudo pacman -S --needed flatpak --noconfirm
 
-# ============================================
-# Installing Other Apps
-# ============================================
-install_other_apps() {
-    echo -e "===============================================\n"
-    echo -e "Installing Other Apps: VLC, Inkscape, YouTube Music, Telegram, Discord, Slack, WhatsApp, Alacritty\n"
-    echo -e "===============================================\n"
-    sudo pacman -S --needed vlc --noconfirm
-    yay -S --needed youtube-music-desktop telegram-desktop-bin okular libreoffice-still whatsapp-for-linux discord slack-desktop --noconfirm
-    yay -S --needed alacritty --noconfirm
-    check_success "Other apps installation"
-}
+# 10. Shell Customization
+if [ ! -d "$HOME/.oh-my-zsh" ]; then
+    print_status "Installing Oh My Zsh..."
+    sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
+fi
 
-# ============================================
-# Installing Flatpak (Optional)
-# ============================================
-install_flatpak() {
-    echo -e "===============================================\n"
-    echo -e "Installing Flatpak\n"
-    echo -e "===============================================\n"
-    sudo pacman -S --needed flatpak --noconfirm
-    check_success "Flatpak installation"
-}
+# 11. AI Tools
+print_status "Installing AI Tools (Cursor, Gemini CLI, Claude Code)..."
+yay -S --needed cursor-bin --noconfirm
+sudo npm install -g @google/gemini-cli @anthropic-ai/claude-code
 
-# ============================================
-# Installing Bash Completion
-# ============================================
-install_bash_completion() {
-    echo -e "===============================================\n"
-    echo -e "Installing Bash Completion\n"
-    echo -e "===============================================\n"
-    sudo pacman -S --needed bash-completion --noconfirm
-    check_success "Bash Completion installation"
-
-    # Enable bash completion in ~/.bashrc if not already enabled
-    if ! grep -q "bash-completion" ~/.bashrc; then
-        echo -e "\n# Enable bash-completion if available\nif [ -f /usr/share/bash-completion/bash_completion ]; then\n    . /usr/share/bash-completion/bash_completion\nfi" >> ~/.bashrc
-        source ~/.bashrc
-    fi
-}
-
-# ============================================
-# Installing vim-plug for Vim and Neovim
-# ============================================
-install_vim_plug() {
-    echo -e "===============================================\n"
-    echo -e "Installing vim-plug for Vim\n"
-    echo -e "===============================================\n"
-    curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
-        https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-    check_success "vim-plug installation for Vim"
-
-    echo -e "===============================================\n"
-    echo -e "Installing vim-plug for Neovim\n"
-    echo -e "===============================================\n"
-    sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs \
-           https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
-    check_success "vim-plug installation for Neovim"
-}
-
-# ============================================
-# Run All Functions
-# ============================================
-update_system
-install_base_tools
-install_yay
-install_essential_apps
-install_fonts
-install_java
-install_zed
-install_browsers
-install_ides_and_editors
-install_dev_tools
-install_other_apps
-install_flatpak
-# install_bash_completion
-# install_vim_plug
-
-# ============================================
-# Final Message
-# ============================================
-echo -e "===============================================\n"
-echo -e "                    DONE                        \n"
-echo -e "===============================================\n"
+print_status "Arch Setup Complete! Check $LOGFILE for details."
