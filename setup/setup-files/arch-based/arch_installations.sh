@@ -108,7 +108,7 @@ sudo pacman -S --needed \
     vlc mpv gimp krita inkscape obs-studio \
     pavucontrol nitrogen flameshot \
     alacritty kitty thunar thunar-archive-plugin file-roller \
-    epiphany okular viewnior libreoffice-fresh xdg-utils --noconfirm
+    epiphany okular viewnior libreoffice-fresh xdg-utils firefox --noconfirm
 
 # AUR Apps
 yay -S --needed \
@@ -161,7 +161,7 @@ install_jetbrains_manual "intellij-idea" "https://download.jetbrains.com/product
 
 # 13. Set Default Applications
 print_status "Setting default applications..."
-xdg-settings set default-web-browser brave.desktop
+xdg-settings set default-web-browser firefox.desktop
 xdg-mime default org.kde.okular.desktop application/pdf
 xdg-mime default viewnior.desktop image/png image/jpeg image/gif
 xdg-mime default thunar.desktop inode/directory

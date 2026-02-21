@@ -123,7 +123,7 @@ sudo dnf install -y \
     pavucontrol flameshot \
     alacritty kitty epiphany \
     chromium thunar thunar-archive-plugin file-roller \
-    okular viewnior libreoffice xdg-utils
+    okular viewnior libreoffice xdg-utils firefox
 
 # 12. Flatpak Apps
 print_status "Installing Flatpak Apps..."
@@ -179,7 +179,7 @@ install_jetbrains_manual "intellij-idea" "https://download.jetbrains.com/product
 
 # 15. Set Default Applications
 print_status "Setting default applications..."
-xdg-settings set default-web-browser brave.desktop
+xdg-settings set default-web-browser firefox.desktop
 xdg-mime default org.kde.okular.desktop application/pdf
 xdg-mime default viewnior.desktop image/png image/jpeg image/gif
 xdg-mime default thunar.desktop inode/directory
