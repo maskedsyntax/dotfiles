@@ -34,7 +34,18 @@ sudo zypper --non-interactive addrepo -f http://ftp.gwdg.de/pub/linux/misc/packm
 sudo zypper --non-interactive --gpg-auto-import-keys refresh
 sudo zypper --non-interactive dist-upgrade --from packman --allow-vendor-change
 
-# 3. Git Configuration
+# 3. NVIDIA Support
+print_status "Installing NVIDIA drivers..."
+sudo zypper --non-interactive addrepo -f https://download.nvidia.com/opensuse/tumbleweed nvidia || true
+sudo zypper --non-interactive refresh
+sudo zypper --non-interactive install nvidia-video-G06 nvidia-gl-G06 nvidia-compute-G06 nvidia-utils-G06
+
+# 4. Bluetooth Support
+print_status "Installing Bluetooth support..."
+sudo zypper --non-interactive install bluez bluez-tools blueman
+sudo systemctl enable --now bluetooth
+
+# 5. Git Configuration
 setup_git() {
     print_status "Configuring Git..."
     git config --global user.name "maskedsyntax"
@@ -46,8 +57,8 @@ setup_git() {
 }
 setup_git
 
-# 4. Essential CLI Tools & Dev Essentials
-print_status "Installing development patterns and essential tools..."
+# 6. Essential CLI Tools & UV
+print_status "Installing development patterns, essential tools and uv..."
 sudo zypper --non-interactive install -t pattern devel_basis devel_C_C++
 sudo zypper --non-interactive install \
     vim gvim neovim xsel htop fastfetch \
@@ -55,9 +66,11 @@ sudo zypper --non-interactive install \
     bash-completion openssh cloc \
     nodejs npm \
     python3-pip python3-devel \
-    ripgrep fd findutils --no-confirm
+    ripgrep fd findutils
+# Install uv
+curl -LsSf https://astral.sh/uv/install.sh | sh
 
-# 5. Programming Languages
+# 7. Programming Languages
 print_status "Installing Programming Languages..."
 sudo zypper --non-interactive install java-21-openjdk-devel go
 if ! command -v rustup &> /dev/null; then
@@ -74,33 +87,34 @@ if [ ! -d "/opt/flutter" ]; then
     fi
 fi
 
-# 6. Fonts
+# 8. Fonts
 print_status "Installing Fonts..."
 sudo zypper --non-interactive install \
     cascadia-fonts jetbrains-mono-fonts fira-code-fonts \
     google-roboto-fonts google-noto-fonts
 
-# 7. Third-Party Repos (VS Code, Sublime, Brave)
+# 9. Third-Party Repos (VS Code, Sublime, Brave)
 print_status "Configuring third-party repositories..."
 sudo rpm --import https://packages.microsoft.com/keys/microsoft.asc
-sudo zypper --non-interactive addrepo https://packages.microsoft.com/yumrepos/vscode vscode
+sudo zypper --non-interactive addrepo https://packages.microsoft.com/yumrepos/vscode vscode || true
 sudo rpm --import https://download.sublimetext.com/sublimehq-pub.gpg
-sudo zypper --non-interactive addrepo https://download.sublimetext.com/rpm/stable/x86_64/sublime-text.repo sublime-text
-sudo zypper --non-interactive addrepo https://brave-browser-rpm-release.s3.brave.com/brave-browser.repo brave
+sudo zypper --non-interactive addrepo https://download.sublimetext.com/rpm/stable/x86_64/sublime-text.repo sublime-text || true
+sudo zypper --non-interactive addrepo https://brave-browser-rpm-release.s3.brave.com/brave-browser.repo brave || true
 sudo rpm --import https://brave-browser-rpm-release.s3.brave.com/brave-core.asc
 
 sudo zypper --non-interactive refresh
 sudo zypper --non-interactive install code sublime-text brave-browser
 
-# 8. GUI Applications
-print_status "Installing GUI Applications..."
+# 10. GUI Applications & Default Tools
+print_status "Installing GUI Applications and Default Tools..."
 sudo zypper --non-interactive install \
     vlc mpv gimp krita inkscape obs-studio \
     pavucontrol flameshot \
     alacritty kitty epiphany \
-    chromium-browser
+    chromium-browser thunar thunar-archive-plugin file-roller \
+    okular viewnior libreoffice xdg-utils
 
-# 9. Flatpak & Specialty Apps
+# 11. Flatpak & Specialty Apps
 print_status "Enabling Flatpak and installing apps..."
 sudo zypper --non-interactive install flatpak
 flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
@@ -113,13 +127,13 @@ flatpak install flathub -y \
     com.getcursor.Cursor \
     com.github.th_ch.youtube_music
 
-# 10. Specialty Editors & AI Tools
+# 12. Specialty Editors & AI Tools
 print_status "Installing Specialty Editors & AI Tools..."
 curl -f https://zed.dev/install.sh | sh
 sudo zypper --non-interactive install helix
 sudo npm install -g @google/gemini-cli @anthropic-ai/claude-code
 
-# 11. Android Studio & IntelliJ (Manual Installation to /opt)
+# 13. Android Studio & IntelliJ (Manual Installation to /opt)
 install_jetbrains_manual() {
     local name=$1
     local url=$2
@@ -154,7 +168,14 @@ EOF
 install_jetbrains_manual "android-studio" "https://redirector.gvt1.com/edgedl/android/studio/ide-zips/2024.3.1.13/android-studio-2024.3.1.13-linux.tar.gz"
 install_jetbrains_manual "intellij-idea" "https://download.jetbrains.com/product?code=IIC&latest&type=release&platform=linux"
 
-# 12. Shell Customization
+# 14. Set Default Applications
+print_status "Setting default applications..."
+xdg-settings set default-web-browser brave.desktop
+xdg-mime default org.kde.okular.desktop application/pdf
+xdg-mime default viewnior.desktop image/png image/jpeg image/gif
+xdg-mime default thunar.desktop inode/directory
+
+# 15. Shell Customization
 if [ ! -d "$HOME/.oh-my-zsh" ]; then
     print_status "Installing Oh My Zsh..."
     sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended

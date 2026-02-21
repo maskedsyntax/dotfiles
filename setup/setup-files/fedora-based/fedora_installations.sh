@@ -40,7 +40,16 @@ sudo dnf group upgrade --with-optional Multimedia -y
 sudo dnf install -y gstreamer1-plugins-{bad-\*,good-\*,base} gstreamer1-plugin-openh264 gstreamer1-libav --exclude=gstreamer1-plugins-bad-free-devel
 sudo dnf install -y lame\* --exclude=lame-devel
 
-# 3. Git Configuration
+# 3. NVIDIA Support
+print_status "Installing NVIDIA drivers and tools..."
+sudo dnf install -y akmod-nvidia xorg-x11-drv-nvidia-cuda nvidia-settings
+
+# 4. Bluetooth Support
+print_status "Installing Bluetooth support..."
+sudo dnf install -y bluez bluez-tools blueman
+sudo systemctl enable --now bluetooth
+
+# 5. Git Configuration
 setup_git() {
     print_status "Configuring Git..."
     git config --global user.name "maskedsyntax"
@@ -52,12 +61,12 @@ setup_git() {
 }
 setup_git
 
-# 4. Enable Flatpak (Flathub)
+# 6. Enable Flatpak (Flathub)
 print_status "Enabling Flathub..."
 flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
 
-# 5. Essential CLI Tools
-print_status "Installing essential CLI tools..."
+# 7. Essential CLI Tools & UV
+print_status "Installing essential CLI tools and uv..."
 sudo dnf group install -y "Development Tools" "C Development Tools and Libraries"
 sudo dnf install -y \
     vim gvim neovim xsel htop fastfetch \
@@ -65,9 +74,11 @@ sudo dnf install -y \
     bash-completion openssh cloc \
     nodejs npm \
     python3-pip python3-devel \
-    ripgrep fd-find findutils --noconfirm
+    ripgrep fd-find findutils
+# Install uv
+curl -LsSf https://astral.sh/uv/install.sh | sh
 
-# 6. Programming Languages
+# 8. Programming Languages
 print_status "Installing Programming Languages..."
 # Java
 sudo dnf install -y java-21-openjdk-devel
@@ -88,13 +99,13 @@ if [ ! -d "/opt/flutter" ]; then
     fi
 fi
 
-# 7. Fonts
+# 9. Fonts
 print_status "Installing Fonts..."
 sudo dnf install -y \
     cascadia-code-fonts-all jetbrains-mono-fonts fira-code-fonts \
     google-roboto-fonts google-noto-fonts
 
-# 8. Third-Party Repos (VS Code, Sublime, Brave)
+# 10. Third-Party Repos (VS Code, Sublime, Brave)
 print_status "Configuring third-party repositories..."
 sudo rpm --import https://packages.microsoft.com/keys/microsoft.asc
 sudo sh -c 'echo -e "[code]\nname=Visual Studio Code\nbaseurl=https://packages.microsoft.com/yumrepos/vscode\nenabled=1\ngpgcheck=1\ngpgkey=https://packages.microsoft.com/keys/microsoft.asc" > /etc/yum.repos.d/vscode.repo'
@@ -105,15 +116,16 @@ sudo dnf config-manager --add-repo https://brave-browser-rpm-release.s3.brave.co
 sudo dnf update -y
 sudo dnf install -y code sublime-text brave-browser
 
-# 9. GUI Applications
-print_status "Installing GUI Applications..."
+# 11. GUI Applications & Default Tools
+print_status "Installing GUI Applications and Default Tools..."
 sudo dnf install -y \
     vlc mpv gimp krita inkscape obs-studio \
     pavucontrol flameshot \
     alacritty kitty epiphany \
-    chromium
+    chromium thunar thunar-archive-plugin file-roller \
+    okular viewnior libreoffice xdg-utils
 
-# 10. Flatpak Apps
+# 12. Flatpak Apps
 print_status "Installing Flatpak Apps..."
 flatpak install flathub -y \
     com.getpostman.Postman \
@@ -124,13 +136,13 @@ flatpak install flathub -y \
     com.getcursor.Cursor \
     com.github.th_ch.youtube_music
 
-# 11. Specialty Editors & AI Tools
+# 13. Specialty Editors & AI Tools
 print_status "Installing Specialty Editors & AI Tools..."
 curl -f https://zed.dev/install.sh | sh
 sudo dnf install -y helix
 sudo npm install -g @google/gemini-cli @anthropic-ai/claude-code
 
-# 12. Android Studio & IntelliJ (Manual Installation to /opt)
+# 14. Android Studio & IntelliJ (Manual Installation to /opt)
 install_jetbrains_manual() {
     local name=$1
     local url=$2
@@ -165,7 +177,14 @@ EOF
 install_jetbrains_manual "android-studio" "https://redirector.gvt1.com/edgedl/android/studio/ide-zips/2024.3.1.13/android-studio-2024.3.1.13-linux.tar.gz"
 install_jetbrains_manual "intellij-idea" "https://download.jetbrains.com/product?code=IIC&latest&type=release&platform=linux"
 
-# 13. Shell Customization
+# 15. Set Default Applications
+print_status "Setting default applications..."
+xdg-settings set default-web-browser brave.desktop
+xdg-mime default org.kde.okular.desktop application/pdf
+xdg-mime default viewnior.desktop image/png image/jpeg image/gif
+xdg-mime default thunar.desktop inode/directory
+
+# 16. Shell Customization
 if [ ! -d "$HOME/.oh-my-zsh" ]; then
     print_status "Installing Oh My Zsh..."
     sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended

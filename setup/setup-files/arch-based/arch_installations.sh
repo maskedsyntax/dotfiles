@@ -57,17 +57,26 @@ else
     print_status "yay is already installed."
 fi
 
-# 5. Essential CLI Tools
-print_status "Installing essential CLI tools..."
+# 5. NVIDIA Support
+print_status "Installing NVIDIA drivers and tools..."
+sudo pacman -S --needed nvidia nvidia-utils nvidia-settings lib32-nvidia-utils --noconfirm
+
+# 6. Bluetooth Support
+print_status "Installing Bluetooth support..."
+sudo pacman -S --needed bluez bluez-utils blueman --noconfirm
+sudo systemctl enable --now bluetooth
+
+# 7. Essential CLI Tools & UV
+print_status "Installing essential CLI tools and uv..."
 sudo pacman -S --needed \
     vim gvim neovim xsel htop fastfetch \
     zsh tree tmux wget unzip curl \
     bash-completion openssh cloc \
-    nodejs npm yarn \
+    nodejs npm yarn uv \
     python-pip \
     ripgrep fd findutils --noconfirm
 
-# 6. Programming Languages (JDK, Go, Rust, Flutter, Dart)
+# 8. Programming Languages (JDK, Go, Rust, Flutter, Dart)
 print_status "Installing Programming Languages..."
 sudo pacman -S --needed jdk-openjdk go --noconfirm
 
@@ -87,18 +96,19 @@ if [ ! -d "/opt/flutter" ]; then
     fi
 fi
 
-# 7. Fonts
+# 9. Fonts
 print_status "Installing Fonts..."
 sudo pacman -S --needed \
     ttf-cascadia-code ttf-jetbrains-mono ttf-fira-code \
     adobe-source-code-pro-fonts --noconfirm
 
-# 8. GUI Applications
-print_status "Installing GUI Applications..."
+# 10. GUI Applications & Default Tools
+print_status "Installing GUI Applications and Default Tools..."
 sudo pacman -S --needed \
     vlc mpv gimp krita inkscape obs-studio \
     pavucontrol nitrogen flameshot \
-    alacritty kitty thunar epiphany --noconfirm
+    alacritty kitty thunar thunar-archive-plugin file-roller \
+    epiphany okular viewnior libreoffice-fresh xdg-utils --noconfirm
 
 # AUR Apps
 yay -S --needed \
@@ -107,14 +117,14 @@ yay -S --needed \
     postman-bin insomnia-bin youtube-music-bin \
     telegram-desktop-bin discord slack-desktop --noconfirm
 
-# 9. Specialty Editors & AI Tools
+# 11. Specialty Editors & AI Tools
 print_status "Installing Specialty Editors & AI Tools..."
 curl -f https://zed.dev/install.sh | sh
 sudo pacman -S --needed helix --noconfirm
 yay -S --needed cursor-bin --noconfirm
 sudo npm install -g @google/gemini-cli @anthropic-ai/claude-code
 
-# 10. Android Studio & IntelliJ (Manual Installation to /opt)
+# 12. Android Studio & IntelliJ (Manual Installation to /opt)
 install_jetbrains_manual() {
     local name=$1
     local url=$2
@@ -149,7 +159,14 @@ EOF
 install_jetbrains_manual "android-studio" "https://redirector.gvt1.com/edgedl/android/studio/ide-zips/2024.3.1.13/android-studio-2024.3.1.13-linux.tar.gz"
 install_jetbrains_manual "intellij-idea" "https://download.jetbrains.com/product?code=IIC&latest&type=release&platform=linux"
 
-# 11. Shell Customization
+# 13. Set Default Applications
+print_status "Setting default applications..."
+xdg-settings set default-web-browser brave.desktop
+xdg-mime default org.kde.okular.desktop application/pdf
+xdg-mime default viewnior.desktop image/png image/jpeg image/gif
+xdg-mime default thunar.desktop inode/directory
+
+# 14. Shell Customization
 if [ ! -d "$HOME/.oh-my-zsh" ]; then
     print_status "Installing Oh My Zsh..."
     sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
