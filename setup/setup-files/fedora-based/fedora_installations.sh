@@ -69,7 +69,7 @@ flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flat
 print_status "Installing essential CLI tools and uv..."
 sudo dnf group install -y "Development Tools" "C Development Tools and Libraries"
 sudo dnf install -y \
-    vim gvim neovim xsel htop fastfetch \
+    vim gvim neovim xsel htop btop fastfetch \
     zsh tree tmux wget unzip curl git \
     bash-completion openssh cloc \
     nodejs npm \
@@ -120,10 +120,11 @@ sudo dnf install -y code sublime-text brave-browser
 print_status "Installing GUI Applications and Default Tools..."
 sudo dnf install -y \
     vlc mpv gimp krita inkscape obs-studio \
-    pavucontrol flameshot \
+    pavucontrol flameshot picom \
     alacritty kitty epiphany \
     chromium thunar thunar-archive-plugin file-roller \
-    okular viewnior libreoffice xdg-utils firefox
+    okular viewnior libreoffice xdg-utils firefox \
+    thunderbird mousepad telegram-desktop gnome-system-monitor steam
 
 # 12. Flatpak Apps
 print_status "Installing Flatpak Apps..."
@@ -134,7 +135,8 @@ flatpak install flathub -y \
     com.slack.Slack \
     com.spotify.Client \
     com.getcursor.Cursor \
-    com.github.th_ch.youtube_music
+    com.github.th_ch.youtube_music \
+    com.github.flxzt.rnote
 
 # 13. Specialty Editors & AI Tools
 print_status "Installing Specialty Editors & AI Tools..."

@@ -69,7 +69,7 @@ sudo systemctl enable --now bluetooth
 # 7. Essential CLI Tools & UV
 print_status "Installing essential CLI tools and uv..."
 sudo pacman -S --needed \
-    vim gvim neovim xsel htop fastfetch \
+    vim gvim neovim xsel htop btop fastfetch \
     zsh tree tmux wget unzip curl \
     bash-completion openssh cloc \
     nodejs npm yarn uv \
@@ -106,16 +106,17 @@ sudo pacman -S --needed \
 print_status "Installing GUI Applications and Default Tools..."
 sudo pacman -S --needed \
     vlc mpv gimp krita inkscape obs-studio \
-    pavucontrol nitrogen flameshot \
+    pavucontrol nitrogen flameshot picom \
     alacritty kitty thunar thunar-archive-plugin file-roller \
-    epiphany okular viewnior libreoffice-fresh xdg-utils firefox --noconfirm
+    epiphany okular viewnior libreoffice-fresh xdg-utils \
+    firefox thunderbird mousepad telegram-desktop gnome-system-monitor steam --noconfirm
 
 # AUR Apps
 yay -S --needed \
     google-chrome brave-bin visual-studio-code-bin \
-    sublime-text-4 spotify \
+    sublime-text-4 spotify rnote \
     postman-bin insomnia-bin youtube-music-bin \
-    telegram-desktop-bin discord slack-desktop --noconfirm
+    discord slack-desktop --noconfirm
 
 # 11. Specialty Editors & AI Tools
 print_status "Installing Specialty Editors & AI Tools..."

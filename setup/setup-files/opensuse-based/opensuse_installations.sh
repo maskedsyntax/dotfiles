@@ -61,7 +61,7 @@ setup_git
 print_status "Installing development patterns, essential tools and uv..."
 sudo zypper --non-interactive install -t pattern devel_basis devel_C_C++
 sudo zypper --non-interactive install \
-    vim gvim neovim xsel htop fastfetch \
+    vim gvim neovim xsel htop btop fastfetch \
     zsh tree tmux wget unzip curl git \
     bash-completion openssh cloc \
     nodejs npm \
@@ -109,10 +109,11 @@ sudo zypper --non-interactive install code sublime-text brave-browser
 print_status "Installing GUI Applications and Default Tools..."
 sudo zypper --non-interactive install \
     vlc mpv gimp krita inkscape obs-studio \
-    pavucontrol flameshot \
+    pavucontrol flameshot picom \
     alacritty kitty epiphany \
     chromium-browser thunar thunar-archive-plugin file-roller \
-    okular viewnior libreoffice xdg-utils firefox
+    okular viewnior libreoffice xdg-utils firefox \
+    thunderbird mousepad telegram-desktop libgnome-system-monitor steam
 
 # 11. Flatpak & Specialty Apps
 print_status "Enabling Flatpak and installing apps..."
@@ -125,7 +126,8 @@ flatpak install flathub -y \
     com.slack.Slack \
     com.spotify.Client \
     com.getcursor.Cursor \
-    com.github.th_ch.youtube_music
+    com.github.th_ch.youtube_music \
+    com.github.flxzt.rnote
 
 # 12. Specialty Editors & AI Tools
 print_status "Installing Specialty Editors & AI Tools..."
