@@ -47,3 +47,33 @@ To fix the Postman Certificate issue:
 ```bash
     openssl req -subj '/C=US/CN=Postman Proxy' -new -newkey rsa:2048 -sha256 -days 365 -nodes -x509 -keyout postman-proxy-ca.key -out postman-proxy-ca.crt
 ```
+
+### Polybar Installation & Setup
+
+To use the polybar configuration, you need to install the following packages:
+
+**Arch Linux:**
+```bash
+# Main package
+sudo pacman -S polybar
+
+# Required Fonts (from official repos)
+sudo pacman -S ttf-fira-mono ttf-cascadia-code ttf-jetbrains-mono
+
+# Required from AUR (use yay or your preferred helper)
+yay -S siji-git ttf-font-awesome-5 python-mpd2
+```
+
+**Note on Fonts:**
+The configuration also uses `Hurmit Nerd Font`. If not available in your repos, you can find various fonts in `themes/fonts/`. To install them manually:
+```bash
+mkdir -p ~/.local/share/fonts
+cp -r themes/fonts/* ~/.local/share/fonts/
+fc-cache -fv
+```
+
+**Running Polybar:**
+The bar is launched via `~/.config/polybar/launch.sh`. Ensure this script is executable:
+```bash
+chmod +x ~/.config/polybar/launch.sh
+```

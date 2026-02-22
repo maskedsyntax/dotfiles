@@ -97,6 +97,19 @@ sub deploy_links {
         }
         closedir($dh);
     }
+
+    # 4. Handle 'wm/' directory
+    my $wm_src = File::Spec->catdir($dotfiles_dir, 'wm');
+    if (-d $wm_src) {
+        print "\n--- Checking window manager configs in wm/ ---\n";
+        opendir(my $dh, $wm_src) or die "Could not open $wm_src: $!";
+        while (my $folder = readdir($dh)) {
+            next if $folder =~ /^\.\.?$/;
+            print "Processing wm folder: $folder\n" if $verbose;
+            create_symlink(File::Spec->catdir($wm_src, $folder), File::Spec->catdir($home_dir, '.config', $folder));
+        }
+        closedir($dh);
+    }
 }
 
 sub push_changes {

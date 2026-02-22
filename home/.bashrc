@@ -61,3 +61,4 @@ PS1="[${RED}\u${NC}${WHITE}@${CYAN}\h${NC} ${MAGENTA}\w${NC}] \[\$(git_prompt_in
 
 # Export PATH
 export PATH=$HOME/.local/bin:$PATH
+. "$HOME/.cargo/env"

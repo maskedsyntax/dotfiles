@@ -59,7 +59,7 @@ fi
 
 # 5. NVIDIA Support
 print_status "Installing NVIDIA drivers and tools..."
-sudo pacman -S --needed nvidia nvidia-utils nvidia-settings lib32-nvidia-utils --noconfirm
+# sudo pacman -S --needed nvidia nvidia-utils nvidia-settings lib32-nvidia-utils --noconfirm
 
 # 6. Bluetooth Support
 print_status "Installing Bluetooth support..."
@@ -69,7 +69,7 @@ sudo systemctl enable --now bluetooth
 # 7. Essential CLI Tools & UV
 print_status "Installing essential CLI tools and uv..."
 sudo pacman -S --needed \
-    vim gvim neovim xsel htop btop fastfetch \
+    neovim xsel htop btop fastfetch \
     zsh tree tmux wget unzip curl \
     bash-completion openssh cloc \
     nodejs npm yarn uv \
@@ -100,13 +100,15 @@ fi
 print_status "Installing Fonts..."
 sudo pacman -S --needed \
     ttf-cascadia-code ttf-jetbrains-mono ttf-fira-code \
+    ttf-fira-mono \
     adobe-source-code-pro-fonts --noconfirm
 
 # 10. GUI Applications & Default Tools
 print_status "Installing GUI Applications and Default Tools..."
 sudo pacman -S --needed \
     vlc mpv gimp krita inkscape obs-studio \
-    pavucontrol nitrogen flameshot picom \
+    pavucontrol flameshot picom \
+    polybar \
     alacritty kitty thunar thunar-archive-plugin file-roller \
     epiphany okular viewnior libreoffice-fresh xdg-utils \
     firefox thunderbird mousepad telegram-desktop gnome-system-monitor steam --noconfirm
@@ -116,7 +118,9 @@ yay -S --needed \
     google-chrome brave-bin visual-studio-code-bin \
     sublime-text-4 spotify rnote \
     postman-bin insomnia-bin youtube-music-bin \
-    discord slack-desktop --noconfirm
+    discord slack-desktop \
+    siji-git ttf-font-awesome-5 \
+    python-mpd2 --noconfirm
 
 # 11. Specialty Editors & AI Tools
 print_status "Installing Specialty Editors & AI Tools..."
