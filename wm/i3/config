@@ -140,6 +140,10 @@ set $ws8 "8"
 set $ws9 "9"
 set $ws10 "0"
 
+# Workspace assignments to monitors
+workspace $ws1 output HDMI-1-0
+workspace $ws10 output eDP-1
+
 # switch to workspace
 bindsym $mod+1 workspace number $ws1
 bindsym $mod+2 workspace number $ws2
@@ -222,7 +226,7 @@ for_window [class="(?i)pocket"] \
 #         tray_output HDMI-1-0
 # }
 
-# exec --no-startup-id canvaz --restore
+exec --no-startup-id canvaz --restore
 exec picom --config ~/.config/picom/picom.conf
 exec --no-startup-id ~/.screenlayout/layout.sh
 
