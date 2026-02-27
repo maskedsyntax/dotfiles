@@ -230,5 +230,6 @@ exec --no-startup-id canvaz --restore
 exec picom --config ~/.config/picom/picom.conf
 exec --no-startup-id ~/.screenlayout/layout.sh
 
+exec --no-startup-id xset r rate 500 100
 exec_always --no-startup-id ~/.config/polybar/launch.sh
 
