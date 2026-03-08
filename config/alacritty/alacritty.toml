@@ -13,11 +13,11 @@ thickness = 0.1
 size = 10
 
 [font.bold]
-family = "SF Mono"
+family = "SpaceMono Nerd Font Mono"
 style = "Bold"
 
 [font.bold_italic]
-family = "SF Mono"
+family = "SpaceMono Nerd Font Mono"
 style = "Bold Italic"
 
 [font.glyph_offset]
@@ -25,11 +25,11 @@ x = 0
 y = 0
 
 [font.italic]
-family = "SF Mono"
+family = "SpaceMono Nerd Font Mono"
 style = "Italic"
 
 [font.normal]
-family = "SF Mono"
+family = "SpaceMono Nerd Font Mono"
 style = "Regular"
 
 [font.offset]
@@ -91,7 +91,7 @@ mouse = "Middle"
 [selection]
 save_to_clipboard = true
 
-[shell]
+[terminal.shell]
 program = "/bin/bash"
 
 [window]
@@ -104,3 +104,5 @@ lines = 50
 [window.padding]
 x = 4
 y = 2
+
+[terminal]

@@ -4,16 +4,16 @@
 
 [global]
     ### Display ###
-    monitor = 1
+    monitor = 0
 
     follow = none
 
     ### Geometry ###
-    width = 300
+    width = 350
     
-    # dynamic height from 0 to 300
+    # dynamic height from 0 to 150
     # The maximum height of a single notification, excluding the frame.
-    height = (0, 300)
+    height = (0, 150)
 
     # Position the notification in the top right corner
     origin = top-right
@@ -30,18 +30,18 @@
     progress_bar_height = 10
     progress_bar_frame_width = 1
     progress_bar_min_width = 150
-    progress_bar_max_width = 300
+    progress_bar_max_width = 350
     progress_bar_corner_radius = 0
     progress_bar_corners = all
     icon_corner_radius = 0
     icon_corners = all
     indicate_hidden = yes
-    transparency = 16
+    transparency = 0
     separator_height = 2
     padding = 8
     horizontal_padding = 8
     text_icon_padding = 0
-    frame_width = 1
+    frame_width = 2
     # frame_color = "#7f3fbf"
     frame_color = "#ffffff"
     gap_size = 0
@@ -96,20 +96,20 @@
 
 
 [urgency_low]
-    background = "#000000"
+    background = "#1a1a1a"
     foreground = "#ffffff"
     timeout = 5
     icon = /usr/share/icons/Qogir/16/status/package-installed-outdated.svg
 
 [urgency_normal]
-    background = "#28143c"
+    background = "#1a1a1a"
     foreground = "#ffffff"
     timeout = 5
     override_pause_level = 30
     icon = /usr/share/icons/Qogir/16/emblems/emblem-question.svg
 
 [urgency_critical]
-    background = "#28143c"
+    background = "#1a1a1a"
     foreground = "#ffffff"
     frame_color = "#ff7f7f"
     timeout = 120
