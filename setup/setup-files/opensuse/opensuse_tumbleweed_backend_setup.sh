@@ -8,7 +8,7 @@
 # - Backend/API collection work for RapidAPI publishing
 # - Small frontend toolchain
 # - Daily essentials: browsers, terminals, media, Bluetooth, NVIDIA, Spotify
-# - Kept extras: OBS Studio, Discord, Okular, Zed, Picom, AI CLI tools
+# - Kept extras: OBS Studio, Discord, Okular, Zed, Picom, Rofi app launcher, AI CLI tools
 # - Intentionally excludes mobile stacks, heavy JetBrains installs, graphics suites,
 #   game clients, and broad desktop creator tooling.
 
@@ -126,7 +126,9 @@ install_system_packages() {
         alacritty kitty \
         firefox chromium brave-browser \
         vlc mpv ffmpeg obs-studio okular picom \
+        rofi \
         flatpak xdg-utils \
+        xfconf \
         thunar thunar-archive-plugin file-roller \
         pavucontrol flameshot \
         bluez bluez-tools blueman \
@@ -206,6 +208,68 @@ configure_services() {
     fi
 }
 
+setup_rofi_launcher() {
+    local script_dir
+    local repo_root
+    local rofi_source_dir
+    local rofi_config_dir="${HOME}/.config/rofi"
+    local launcher_path="${HOME}/.local/bin/rofi-app-launcher"
+    local rofi_theme="${rofi_config_dir}/arc_dark_transparent_colors.rasi"
+    local rofi_command="${launcher_path}"
+
+    set_xfce_shortcut() {
+        local shortcut="$1"
+        local command="$2"
+        local property="/commands/custom/${shortcut}"
+
+        xfconf-query -c xfce4-keyboard-shortcuts -p "$property" -s "$command" 2>/dev/null ||
+            xfconf-query -c xfce4-keyboard-shortcuts -p "$property" -n -t string -s "$command"
+    }
+
+    script_dir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+    repo_root="$(cd -- "${script_dir}/../../.." && pwd)"
+    rofi_source_dir="${repo_root}/config/rofi"
+
+    mkdir -p "$rofi_config_dir" "${HOME}/.local/bin"
+
+    if [[ -d "$rofi_source_dir" ]]; then
+        cp -R "${rofi_source_dir}/." "$rofi_config_dir/"
+    else
+        print_warning "Could not find repo Rofi config at $rofi_source_dir. Creating launcher with default Rofi theme."
+        rofi_theme=""
+    fi
+
+    cat >"$launcher_path" <<'EOF'
+#!/usr/bin/env bash
+
+THEME="${HOME}/.config/rofi/arc_dark_transparent_colors.rasi"
+
+if [[ -f "$THEME" ]]; then
+    exec rofi -show drun -show-icons -theme "$THEME"
+fi
+
+exec rofi -show drun -show-icons
+EOF
+    chmod +x "$launcher_path"
+
+    # Replace XFCE's run/appfinder shortcuts with Rofi when XFCE settings are available.
+    # Alt+F2 is the common XFCE "Run Program" shortcut; Alt+F3 is commonly appfinder.
+    # Super+Space and Super+R provide fast launcher alternatives.
+    if command_exists xfconf-query; then
+        set_xfce_shortcut "<Alt>F2" "$rofi_command" || true
+        set_xfce_shortcut "<Alt>F3" "$rofi_command" || true
+        set_xfce_shortcut "<Super>space" "$rofi_command" || true
+        set_xfce_shortcut "<Super>r" "$rofi_command" || true
+    else
+        print_warning "xfconf-query not found. Rofi launcher was installed, but XFCE shortcuts were not changed."
+    fi
+
+    print_status "Rofi launcher installed at $launcher_path"
+    if [[ -n "$rofi_theme" ]]; then
+        print_status "Rofi theme installed at $rofi_theme"
+    fi
+}
+
 set_defaults() {
     xdg-settings set default-web-browser google-chrome.desktop || true
     xdg-mime default google-chrome.desktop x-scheme-handler/http x-scheme-handler/https text/html || true
@@ -223,6 +287,7 @@ main() {
     run_step "Installing Node, Python, API CLI, AI CLI, Bun, uv, and Zed tooling" install_runtime_tools
     run_step "Installing shell tooling" install_shell_tools
     run_step "Enabling services" configure_services
+    run_step "Configuring Rofi app launcher for XFCE shortcuts" setup_rofi_launcher
     run_step "Setting default applications" set_defaults
 
     if ((${#FAILED_STEPS[@]} > 0)); then
